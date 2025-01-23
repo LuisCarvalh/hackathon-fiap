@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, Alert, StyleSheet } from 'react-native';
+import { View, TextInput, Button, Alert, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import loginUser from '@/src/services/user';
 
@@ -28,21 +28,24 @@ export default function Login() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Login</Text>
       <TextInput
         style={styles.input}
-        placeholder="Username"
+        placeholder="Usuário"
         value={user}
         onChangeText={setUser}
       />
       <TextInput
         style={styles.input}
-        placeholder="Password"
+        placeholder="Senha"
         secureTextEntry
         value={password}
         onChangeText={setPassword}
       />
-      <Button title="Login" onPress={handleButtonPress} />
+      <TouchableOpacity
+        style={styles.button}
+        onPress={handleButtonPress}>
+        <Text style={styles.buttonText}>Entrar</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -53,28 +56,38 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
-    backgroundColor: '#f5f6fa',
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#2c3e50',
-    marginBottom: 20,
-    textAlign: 'center',
+    backgroundColor: '#fff',
   },
   input: {
     height: 50, 
-    borderColor: '#dcdde1', 
+    borderColor: '#DBD9CD', 
     borderWidth: 1,
-    borderRadius: 8,
+    borderRadius: 10,
     marginBottom: 12,
     paddingHorizontal: 15, 
     width: '100%',
-    backgroundColor: '#fff', 
+    backgroundColor: '#F4F4F2', 
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 1,
+    color: '#4E4E4E',
+    fontSize: 16,
+    textAlign: 'center'
   },
+  button: {
+    width: '100%',
+    backgroundColor: '#391A5F',
+    marginTop: 16,
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 10,
+  },
+  buttonText: {
+    color: '#fff',
+    alignSelf: 'center',
+    fontWeight: 700,
+    fontSize: 16
+  }
 });
