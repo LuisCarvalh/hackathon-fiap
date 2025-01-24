@@ -4,8 +4,8 @@ import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 interface HeaderProps {
-  user: User;
-  token: string;
+  user?: User;
+  token?: string;
 }
 
 export default function Header({ user, token }: HeaderProps) {
@@ -27,7 +27,9 @@ export default function Header({ user, token }: HeaderProps) {
       </View>
       <View style={styles.rightContainer}>
       <View>
-        <Text style={styles.userName}>Olá, {user.name}</Text>
+        {user?.name && (
+          <Text style={styles.userName}>Olá, {user?.name}</Text>
+        )}
       </View>
       {user?.isadmin && (
         <View>

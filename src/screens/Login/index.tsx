@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import { View, TextInput, Button, Alert, StyleSheet, TouchableOpacity, Text } from 'react-native';
+import { View, TextInput, Alert, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import loginUser from '@/src/services/user';
+import HeaderLogin from '@/src/componentes/shared/HeaderLogin';
+import Footer from '@/src/componentes/shared/Footer';
 
 export default function Login() {
   const [user, setUser] = useState('');
@@ -28,6 +30,7 @@ export default function Login() {
 
   return (
     <View style={styles.container}>
+      <HeaderLogin title='Login'/>
       <TextInput
         style={styles.input}
         placeholder="Usuário"
@@ -46,6 +49,7 @@ export default function Login() {
         onPress={handleButtonPress}>
         <Text style={styles.buttonText}>Entrar</Text>
       </TouchableOpacity>
+      <Footer />
     </View>
   );
 }
