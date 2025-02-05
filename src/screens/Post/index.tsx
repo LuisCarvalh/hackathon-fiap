@@ -89,6 +89,10 @@ export default function Post({ route }) {
     );
   };
 
+  const handleCreateQuizPress = (token, userId, postId:string) => {
+    navigation.navigate('CreateQuiz', { token, userId, postId});
+  };
+
   const handleLoadMore = () => {
     if (page < totalPages - 1 && !isFetchingMore) {
       setIsFetchingMore(true);
@@ -155,6 +159,8 @@ export default function Post({ route }) {
               <View style={styles.postButtonContainer}>
                 <TouchableOpacity style={styles.editPostButton} onPress={() => handleEditPostPress(token, user?.id, item)}><Text style={styles.buttonText}>Edit</Text></TouchableOpacity>
                 <TouchableOpacity style={styles.deletePostButton} onPress={() => handleDelete(item.id)}><Text style={styles.buttonText}>Delete</Text></TouchableOpacity>
+                <TouchableOpacity style={styles.editPostButton} onPress={() => handleCreateQuizPress(token, user?.id, item.id)}><Text style={styles.buttonText}>Add Quiz</Text></TouchableOpacity>
+
               </View>
             )}
             </TouchableOpacity>
