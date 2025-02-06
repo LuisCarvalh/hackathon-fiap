@@ -14,7 +14,7 @@ export default function EditPost({ route }) {
     try {
       await editPost(token, id, title, content, userId);
       Alert.alert('', 'Conteudo editado com sucesso');
-      navigation.navigate('Post', {token});
+      navigation.navigate('Atividades', {token});
     } catch (error) {
       console.error('Failed to edit post:', error);
     }
@@ -22,20 +22,21 @@ export default function EditPost({ route }) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>Title</Text>
+      <Text style={styles.label}>Título</Text>
       <TextInput
         style={styles.input}
         value={title}
         onChangeText={setTitle}
       />
-      <Text style={styles.label}>Content</Text>
+      <Text style={styles.label}>Conteúdo</Text>
       <TextInput
         style={styles.input}
         value={content}
         onChangeText={setContent}
         multiline
       />
-      <Button title="Update post" onPress={handleEditPost} />
+      <Button color='#391A5F' title="Atualizar" onPress={handleEditPost} />
+
     </View>
   );
 }

@@ -15,7 +15,7 @@ export default function Login() {
       const response = await loginUser(user, password);
       if(response.ok){
         const token = response.token;
-        navigation.navigate('Post', { token });
+        navigation.navigate('Atividades', { token });
       }else {
         errorHandler();
       }

@@ -1,13 +1,15 @@
 import React, { useEffect, useLayoutEffect, useState } from 'react'
-import { View, Text, FlatList, StyleSheet, ActivityIndicator, TouchableOpacity, Alert} from 'react-native'
+import { View, Text, FlatList, StyleSheet, ActivityIndicator, TouchableOpacity, Alert } from 'react-native'
 import { deletePost, fetchPosts } from '@/src/services/post'
 import { useNavigation } from '@react-navigation/native';
 import { fetchUser } from '@/src/services/user';
 import Header from '@/src/componentes/shared/Header';
 import { Searchbar } from 'react-native-paper';
+import Footer from '@/src/componentes/shared/Footer';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 export default function Post({ route }) {
-  const { token} = route.params;
+  const { token } = route.params;
   const [posts, setPosts] = useState<Post[]>([]);
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
@@ -33,7 +35,7 @@ export default function Post({ route }) {
   useLayoutEffect(() => {
     if (user) {
       navigation.setOptions({
-        headerTitle: () => <Header user={user} token={token} />,
+        headerRight: () => <Header user={user} token={token} />,
       });
     }
   }, [navigation, user]);
@@ -56,14 +58,14 @@ export default function Post({ route }) {
   }, [page, token]);
 
   const handlePostPress = (post: Post) => {
-    navigation.navigate('PostDetails', { post });
+    navigation.navigate('Atividade', { post });
   };
 
   const handleEditPostPress = (token, userId, post: Post) => {
-    navigation.navigate('EditPost', { token, userId, post });
+    navigation.navigate('Editar atividade', { token, userId, post });
   };
 
-  const handleDelete = async (id:string) => {
+  const handleDelete = async (id: string) => {
     Alert.alert(
       '',
       'Tem certeza que deseja excluir essa publicação?',
@@ -89,8 +91,8 @@ export default function Post({ route }) {
     );
   };
 
-  const handleCreateQuizPress = (token, userId, postId:string) => {
-    navigation.navigate('CreateQuiz', { token, userId, postId});
+  const handleCreateQuizPress = (token, userId, postId: string) => {
+    navigation.navigate('Criar quiz', { token, userId, postId });
   };
 
   const handleLoadMore = () => {
@@ -124,51 +126,54 @@ export default function Post({ route }) {
 
   return (
     <View style={styles.container}>
+      <View>
+        {user?.isadmin && (
+          <TouchableOpacity
+            style={styles.createPostButton}
+            onPress={() => navigation.navigate('Adicionar conteúdo', { token, userId: user.id })}
+          >
+            <Text style={styles.buttonText}>Criar atividade</Text>
+          </TouchableOpacity>
+        )}
+      </View>
       <View style={styles.topContainer}>
         <Searchbar
-          placeholder="Search"
+          placeholder="Buscar"
           onChangeText={handleSearch}
           value={searchQuery}
           style={styles.searchbar}
         />
-        {user?.isadmin && (
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity
-              style={styles.createPostButton}
-              onPress={() => navigation.navigate('CreatePost', { token, userId: user.id })}
-            >
-              <Text style={styles.buttonText}>Create</Text>
-            </TouchableOpacity>
-          </View>
-        )}
       </View>
+      <View style={styles.listContainer}>
       <FlatList
         data={posts}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <TouchableOpacity
-          style={styles.post}
-          onPress={() => handlePostPress(item)}
-        >
-          <View>
-            <Text style={styles.title}>{item.title}</Text>
-            <Text>{item.content.length > 100 ? `${item.content.substring(0, 100)}...` : item.content}</Text>
-            <Text>Autor: {item.author.name}</Text>
-          </View>
+            style={styles.post}
+            onPress={() => handlePostPress(item)}
+          >
+            <View>
+              <Text style={styles.title}>{item.title}</Text>
+              <Text>{item.content.length > 100 ? `${item.content.substring(0, 100)}...` : item.content}</Text>
+              <Text>Autor: {item.author.name}</Text>
+            </View>
             {user?.isadmin && (
               <View style={styles.postButtonContainer}>
-                <TouchableOpacity style={styles.editPostButton} onPress={() => handleEditPostPress(token, user?.id, item)}><Text style={styles.buttonText}>Edit</Text></TouchableOpacity>
-                <TouchableOpacity style={styles.deletePostButton} onPress={() => handleDelete(item.id)}><Text style={styles.buttonText}>Delete</Text></TouchableOpacity>
-                <TouchableOpacity style={styles.editPostButton} onPress={() => handleCreateQuizPress(token, user?.id, item.id)}><Text style={styles.buttonText}>Add Quiz</Text></TouchableOpacity>
+                <TouchableOpacity style={styles.addQuizButton} onPress={() => handleCreateQuizPress(token, user?.id, item.id)}><Text style={styles.buttonText}>Add Quiz</Text></TouchableOpacity>
+                <TouchableOpacity style={styles.editPostButton} onPress={() => handleEditPostPress(token, user?.id, item)}><Icon name="edit" size={20} color="#fff"/></TouchableOpacity>
+                <TouchableOpacity style={styles.deletePostButton} onPress={() => handleDelete(item.id)}><Icon name="delete" size={20} color="#fff"/></TouchableOpacity>
 
               </View>
             )}
-            </TouchableOpacity>
+          </TouchableOpacity>
         )}
         onEndReached={handleLoadMore}
         onEndReachedThreshold={0.5}
         ListFooterComponent={isFetchingMore ? <ActivityIndicator size="small" color="#0000ff" /> : null}
-      />
+        />
+        </View>
+      <Footer />
     </View>
   );
 }
@@ -177,7 +182,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    backgroundColor: '#f0f4f8',
+    backgroundColor: '#fff',
     overflow: 'visible',
   },
   loader: {
@@ -191,24 +196,21 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 16,
   },
-  buttonContainer: {
-    alignItems: 'flex-end',
-  },
   searchbar: {
     flex: 1,
-    marginRight: 8,
-    backgroundColor: '#fff',
-    borderRadius: 8,
+    marginRight: 6,
+    backgroundColor: '#F4F4F2',
+    borderRadius: 4,
     paddingHorizontal: 12,
-    paddingVertical: 8,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 1,
+    marginTop: 8,
   },
   createPostButton: {
-    backgroundColor: '#28a745',
+    backgroundColor: '#391A5F',
     paddingVertical: 6,
     paddingHorizontal: 12,
     borderRadius: 4,
@@ -217,6 +219,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 4,
     elevation: 2,
+    marginBottom: 8,
   },
   buttonText: {
     color: '#fff',
@@ -250,7 +253,19 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   editPostButton: {
-    backgroundColor: '#ed9121',
+    backgroundColor: '#391A5F',
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 4,
+    marginRight: 8,
+    shadowColor: '#28a745',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  addQuizButton: {
+    backgroundColor: '#2D51AC',
     paddingVertical: 6,
     paddingHorizontal: 12,
     borderRadius: 4,
@@ -262,10 +277,10 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   deletePostButton: {
-    width: 70,
     backgroundColor: '#dc3545',
     paddingHorizontal: 12,
     borderRadius: 4,
+    marginRight: 8,
     paddingVertical: 6,
     shadowColor: '#dc3545',
     shadowOffset: { width: 0, height: 2 },
@@ -273,4 +288,8 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 2,
   },
+  listContainer: {
+    backgroundColor: '#F4F4F2',
+    borderRadius: 4,
+  }
 });

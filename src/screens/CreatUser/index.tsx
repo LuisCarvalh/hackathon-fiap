@@ -20,7 +20,7 @@ export default function CreateUser({ route }) {
         await createUser(token, { name, email, password, isadmin: isAdmin });
         Alert.alert('', 'Usuario criado com sucesso');
       }
-      navigation.navigate('ListUsers', { token });
+      navigation.navigate('Listar usuários', { token });
     } catch (error) {
       console.error('Failed to save user:', error);
       Alert.alert('Error', 'Failed to save user');
@@ -57,7 +57,7 @@ export default function CreateUser({ route }) {
           onValueChange={setIsAdmin}
         />
       </View>
-      <Button title={user ? "Editar Usuario" : "Criar Usuario"} onPress={handleSaveUser} />
+      <Button color='#391A5F' title={user ? "Editar Usuario" : "Criar Usuario"} onPress={handleSaveUser} />
     </View>
   );
 }

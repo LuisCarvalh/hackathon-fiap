@@ -1,6 +1,6 @@
 import React, { useEffect, useLayoutEffect, useState } from 'react';
 import { View, Text, FlatList, StyleSheet, ActivityIndicator, TouchableOpacity, Alert } from 'react-native';
-
+import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation } from '@react-navigation/native';
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 import { Dimensions } from 'react-native';
@@ -28,46 +28,46 @@ export default function ListUsers({ route }) {
     { key: 'students', title: 'Alunos' },
   ]);
 
-  
-    const loadUser = async () => {
-      try {
-        const userData = await fetchUser(token);
-        setUser(userData);
-      } catch (error) {
-        console.error('Failed to fetch user:', error);
-      }finally {
-        setLoading(false);
-      }
-    };
+
+  const loadUser = async () => {
+    try {
+      const userData = await fetchUser(token);
+      setUser(userData);
+    } catch (error) {
+      console.error('Failed to fetch user:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useLayoutEffect(() => {
+    if (user) {
+      navigation.setOptions({
+        headerRight: () => <Header user={user} token={token} />,
+      });
+    }
+  }, [navigation, user]);
 
   useEffect(() => {
     loadUser();
   }, [token, pageProfessors, pageStudents]);
 
-  useLayoutEffect(() => {
-    if (user) {
-      navigation.setOptions({
-        headerTitle: () => <Header user={user} token={token} />,
-      });
+  const loadUsers = async () => {
+    try {
+      const [professorsData, studentsData] = await Promise.all([
+        fetchUserList(token, true, pageProfessors),
+        fetchUserList(token, false, pageStudents),
+      ]);
+      setProfessors(professorsData.data);
+      setTotalPagesProfessors(professorsData.pagination.totalPages);
+      setStudents(studentsData.data);
+      setTotalPagesStudents(studentsData.pagination.totalPages);
+    } catch (error) {
+      console.error('Failed to fetch users:', error);
+    } finally {
+      setLoading(false);
     }
-  }, [navigation, user]);
-
-    const loadUsers = async () => {
-      try {
-        const [professorsData, studentsData] = await Promise.all([
-          fetchUserList(token, true, pageProfessors),
-          fetchUserList(token, false, pageStudents),
-        ]);
-        setProfessors(professorsData.data);
-        setTotalPagesProfessors(professorsData.pagination.totalPages);
-        setStudents(studentsData.data);
-        setTotalPagesStudents(studentsData.pagination.totalPages);
-      } catch (error) {
-        console.error('Failed to fetch users:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  };
 
   useEffect(() => {
     loadUsers();
@@ -88,8 +88,8 @@ export default function ListUsers({ route }) {
   };
 
   const handleEditUser = (user: User) => {
-    navigation.navigate('User', { token, user });
-    
+    navigation.navigate('Usuário', { token, user });
+
   };
 
   const handleDeleteUser = async (userId: string) => {
@@ -149,12 +149,12 @@ export default function ListUsers({ route }) {
 
   return (
     <View style={styles.container}>
-      <View style={styles.buttonContainer}>
+      <View>
         <TouchableOpacity
           style={styles.createUserButton}
-          onPress={() => navigation.navigate('User', { token })}
+          onPress={() => navigation.navigate('Usuário', { token })}
         >
-          <Text style={styles.buttonText}>Create User</Text>
+          <Text style={styles.buttonText}>Criar Usuário</Text>
         </TouchableOpacity>
       </View>
       <TabView
@@ -169,7 +169,7 @@ export default function ListUsers({ route }) {
             style={styles.tabBar}
             labelStyle={styles.label}
             activeColor="#000"
-            inactiveColor="#888" 
+            inactiveColor="#888"
           />
         )}
       />
@@ -187,10 +187,10 @@ function UserList({ users, onLoadMore, isFetchingMore, onEdit, onDelete }) {
           <Text style={styles.userName}>{item.name}</Text>
           <View style={styles.buttonContainer}>
             <TouchableOpacity style={styles.editButton} onPress={() => onEdit(item)}>
-              <Text style={styles.buttonText}>Edit</Text>
+              <Icon name="edit" size={20} color="#fff" />
             </TouchableOpacity>
             <TouchableOpacity style={styles.deleteButton} onPress={() => onDelete(item.id)}>
-              <Text style={styles.buttonText}>Delete</Text>
+              <Icon name="delete" size={20} color="#fff" />
             </TouchableOpacity>
           </View>
         </View>
@@ -213,14 +213,17 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
-  buttonContainer: {
-    flexDirection: 'row',
-  },
   createUserButton: {
-    backgroundColor: '#28a745',
+    backgroundColor: '#391A5F',
     paddingVertical: 6,
     paddingHorizontal: 12,
     borderRadius: 4,
+    shadowColor: '#007bff',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 2,
+    marginBottom: 8,
   },
   editButton: {
     backgroundColor: '#ed9121',
@@ -244,6 +247,10 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 14,
     fontWeight: 'bold',
+    textAlign: 'center'
+  },
+  buttonContainer: {
+    flexDirection: 'row',
   },
   userContainer: {
     flexDirection: 'row',

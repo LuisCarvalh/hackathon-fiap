@@ -86,9 +86,9 @@ export default function CreateQuiz({ route }) {
           </View>
         )}
       />
-      <Button title="Adicionar opção" onPress={addOption} />
-      <Button title="Adicionar pergunta" onPress={addQuestion} />
-      <Button title="Criar Quiz" onPress={createQuiz} />
+      <Button color='#391A5F' title="Adicionar opção" onPress={addOption} />
+      <Button color='#391A5F' title="Adicionar pergunta" onPress={addQuestion} />
+      <Button color='#391A5F' title="Criar Quiz" onPress={createQuiz} />
     </View>
   );
 }

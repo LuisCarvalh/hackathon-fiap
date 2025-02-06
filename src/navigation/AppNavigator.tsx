@@ -13,15 +13,23 @@ const Stack = createStackNavigator();
 
 export default function AppNavigator() {
   return (
-      <Stack.Navigator initialRouteName="Login">
+      <Stack.Navigator initialRouteName="Login" screenOptions={{
+        headerStyle: {
+          backgroundColor: '#391A5F',
+        },
+        headerTintColor: '#fff',
+        headerTitleStyle: {
+          fontWeight: 'bold',
+        },
+      }}>
         <Stack.Screen name="Login" component={Login} options={{headerShown: false}} />
-        <Stack.Screen name="Post" component={Post} />
-        <Stack.Screen name="PostDetails" component={PostDetails} />
-        <Stack.Screen name="CreatePost" component={CreatePost} />
-        <Stack.Screen name="EditPost" component={EditPost} />
-        <Stack.Screen name="ListUsers" component={ListUsers} />
-        <Stack.Screen name="User" component={CreateUser} />
-        <Stack.Screen name="CreateQuiz" component={CreateQuiz} />
+        <Stack.Screen name="Atividades" component={Post}/>
+        <Stack.Screen name="Atividade" component={PostDetails}/>
+        <Stack.Screen name="Adicionar conteúdo" component={CreatePost}/>
+        <Stack.Screen name="Editar atividade" component={EditPost}/>
+        <Stack.Screen name="Listar usuários" component={ListUsers}/>
+        <Stack.Screen name="Usuário" component={CreateUser}/>
+        <Stack.Screen name="Criar quiz" component={CreateQuiz}/>
       </Stack.Navigator>
   );
 }

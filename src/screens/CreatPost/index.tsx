@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { createPost } from '@/src/services/post';
+import Footer from '@/src/componentes/shared/Footer';
 
 
 export default function CreatePost({ route }) {
@@ -14,7 +15,7 @@ export default function CreatePost({ route }) {
     try {
       await createPost(token, title, content, userId);
       Alert.alert('', 'Conteudo criado com sucesso');
-      navigation.navigate('Post', {token});
+      navigation.navigate('Atividades', {token});
     } catch (error) {
       console.error('Failed to create post:', error);
     }
@@ -22,20 +23,21 @@ export default function CreatePost({ route }) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>Title</Text>
+      <Text style={styles.label}>Título</Text>
       <TextInput
         style={styles.input}
         value={title}
         onChangeText={setTitle}
       />
-      <Text style={styles.label}>Content</Text>
+      <Text style={styles.label}>Conteúdo</Text>
       <TextInput
         style={styles.input}
         value={content}
         onChangeText={setContent}
         multiline
       />
-      <Button title="Create Post" onPress={handleCreatePost} />
+      <Button color='#391A5F' title="Criar" onPress={handleCreatePost} />
+      <Footer />
     </View>
   );
 }
