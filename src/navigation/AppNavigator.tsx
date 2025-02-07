@@ -8,6 +8,7 @@ import EditPost from '../screens/EditPost';
 import ListUsers from '../screens/ListUsers';
 import CreateUser from '../screens/CreatUser';
 import CreateQuiz from '../screens/CreatQuiz';
+import ShowQuiz from '../screens/ShowQuiz';
 
 const Stack = createStackNavigator();
 
@@ -30,6 +31,7 @@ export default function AppNavigator() {
         <Stack.Screen name="Listar usuários" component={ListUsers}/>
         <Stack.Screen name="Usuário" component={CreateUser}/>
         <Stack.Screen name="Criar quiz" component={CreateQuiz}/>
+        <Stack.Screen name="Quiz" component={ShowQuiz}/>
       </Stack.Navigator>
   );
 }

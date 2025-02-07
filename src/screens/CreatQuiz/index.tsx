@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, CheckBox, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { createQuiz } from '@/src/services/quiz';
 
 export default function CreateQuiz({ route }) {
   const { token, userId, postId } = route.params;
   const navigation = useNavigation();
-  const [questions, setQuestions] = useState([]);
+  const [questions, setQuestions] = useState([{ content: '', options: [{ content: '', isCorrect: false }] }]);
   const [questionText, setQuestionText] = useState('');
   const [options, setOptions] = useState([{ content: '', isCorrect: false }]);
   
@@ -29,14 +30,16 @@ export default function CreateQuiz({ route }) {
       console.error('Question text or options are empty');
       return;
     }
+    console.log('questions:', questions);
     const newQuestion = { content: questionText, options };
     console.log('Adding question:', newQuestion);
     setQuestions([...questions, newQuestion]);
+    console.log('questions:', questions);
     setQuestionText('');
     setOptions([{ content: '', isCorrect: false }]);
   };
 
-  const createQuiz = async () => {
+  const handleCreateQuiz = async () => {
     console.log('Questions before submitting:', questions);
     if (questions.length === 0) {
       console.error('No questions to submit');
@@ -46,19 +49,10 @@ export default function CreateQuiz({ route }) {
     console.log('Creating quiz with questions:', questions);
 
     try {
-      const response = await fetch('http://192.168.0.110:3000/quiz', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-        body: JSON.stringify({ postId, questions })
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to create quiz');
-      }
-
-      navigation.goBack();
+        await createQuiz(token, postId, questions);
+        navigation.navigate('Atividades', { token, userId, refresh: true });
     } catch (error) {
-      console.error('Error creating quiz:', error);
+        console.error('Error creating quiz:', error);
     }
   };
 
@@ -88,7 +82,7 @@ export default function CreateQuiz({ route }) {
       />
       <Button color='#391A5F' title="Adicionar opção" onPress={addOption} />
       <Button color='#391A5F' title="Adicionar pergunta" onPress={addQuestion} />
-      <Button color='#391A5F' title="Criar Quiz" onPress={createQuiz} />
+      <Button color='#391A5F' title="Criar Quiz" onPress={handleCreateQuiz} />
     </View>
   );
 }

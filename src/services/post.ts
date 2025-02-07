@@ -49,6 +49,8 @@ export async function createPost(token: string, title: string, content: string, 
 export async function editPost(token: string, id: string, title: string, content: string, author: string): Promise<Post> {
   const url = `${API_URL}/post/${id}`;
 
+  console.log({API_URL})
+
   const response = await fetch(url, {
     method: 'PUT',
     headers: {

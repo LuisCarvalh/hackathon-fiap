@@ -2,6 +2,10 @@ interface Author {
     id: string;
     name: string;
   }
+
+interface Quiz {
+  id: string;
+}
   
   interface Post {
     id: string;
@@ -10,4 +14,5 @@ interface Author {
     createdAt: string;
     updatedAt: string | null;
     author: Author;
+    quiz: Quiz | null;
   }

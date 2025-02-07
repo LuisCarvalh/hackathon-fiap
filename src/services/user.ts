@@ -11,6 +11,7 @@ interface LoginRequest {
 }
 
 export default async function loginUser(email: string, password: string): Promise<LoginResponse> {
+  console.log(API_URL);
   const response = await fetch(`${API_URL}/user/signin`, {
     method: 'POST',
     headers: {

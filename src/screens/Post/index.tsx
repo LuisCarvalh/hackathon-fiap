@@ -95,7 +95,11 @@ export default function Post({ route }) {
     navigation.navigate('Criar quiz', { token, userId, postId });
   };
 
-  const handleLoadMore = () => {
+  const handleShowQuizPress = (quizId: string) => {
+    navigation.navigate('Quiz', { token, quizId });
+  };
+
+  const handleLoadMore = () => {  
     if (page < totalPages - 1 && !isFetchingMore) {
       setIsFetchingMore(true);
       setPage((prevPage) => prevPage + 1);
@@ -160,7 +164,11 @@ export default function Post({ route }) {
             </View>
             {user?.isadmin && (
               <View style={styles.postButtonContainer}>
-                <TouchableOpacity style={styles.addQuizButton} onPress={() => handleCreateQuizPress(token, user?.id, item.id)}><Text style={styles.buttonText}>Add Quiz</Text></TouchableOpacity>
+                {item.quiz != null ? (
+                  <TouchableOpacity style={styles.addQuizButton} onPress={() => handleShowQuizPress(item.quiz?.id)}><Text style={styles.buttonText}>Quiz</Text></TouchableOpacity>
+                ) : (
+                  <TouchableOpacity style={styles.addQuizButton} onPress={() => handleCreateQuizPress(token, user?.id, item.id)}><Text style={styles.buttonText}>Criar Quiz</Text></TouchableOpacity>
+                )}
                 <TouchableOpacity style={styles.editPostButton} onPress={() => handleEditPostPress(token, user?.id, item)}><Icon name="edit" size={20} color="#fff"/></TouchableOpacity>
                 <TouchableOpacity style={styles.deletePostButton} onPress={() => handleDelete(item.id)}><Icon name="delete" size={20} color="#fff"/></TouchableOpacity>
 
